@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 手机视口适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模版</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部筛选标签区域 -->
+    <div class="template-filter-top">
+        <div class="filter-grid">
+            <div class="filter-tag active" data-target="纯文字厅头">纯文字厅头</div>
+            <div class="filter-tag" data-target="带头像厅头">带头像厅头</div>
+            <div class="filter-tag" data-target="福利图">福利图</div>
+            <div class="filter-tag" data-target="厅战图">厅战图</div>
+            <div class="filter-tag" data-target="厅背景">厅背景</div>
+            <div class="filter-tag" data-target="歌单">歌单</div>
+            <div class="filter-tag" data-target="关系卡">关系卡</div>
+            <div class="filter-tag" data-target="直播框">直播框</div>
+        </div>
+    </div>
+    <!-- 图片区域：JS动态渲染，无需手写卡片 -->
+    <div class="template-grid">
+        <div class="gallery-group active" data-name="纯文字厅头"></div>
+        <div class="gallery-group" data-name="带头像厅头"></div>
+        <div class="gallery-group" data-name="福利图"></div>
+        <div class="gallery-group" data-name="厅战图"></div>
+        <div class="gallery-group" data-name="厅背景"></div>
+        <div class="gallery-group" data-name="歌单"></div>
+        <div class="gallery-group" data-name="关系卡"></div>
+        <div class="gallery-group" data-name="直播框"></div>
+    </div>
+
+    <!-- 全屏预览弹窗 -->
+    <div class="img-fullscreen" id="imgFullscreen">
+        <span class="full-close">✕</span>
+        <div class="full-wrap">
+            <img id="fullImg" src="" alt="">
+        </div>
+        <div class="full-prev">‹</div>
+        <div class="full-next">›</div>
+        <div class="full-tip" id="fullTip"></div>
+    </div>
+
+    <!-- 底部导航 -->
+    <footer class="nav-bar">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            <span>主页</span>
+        </a>
+        <a href="template.html" class="nav-item active">
+            <span class="nav-icon">▦</span>
+            <span>模版</span>
+        </a>
+    </footer>
+
+<script>
+// 分类列表
+const categoryList = [
+    "纯文字厅头",
+    "带头像厅头",
+    "福利图",
+    "厅战图",
+    "厅背景",
+    "歌单",
+    "关系卡",
+    "直播框"
+];
+// 图片后缀
+const imgExt = ["jpg","jpeg","png","webp"];
+
+// ========== 注意：本地file协议无法读取文件夹文件列表 ==========
+// 方案：这里演示【模拟图片数组】，如果你部署在服务器，后端需要返回目录文件列表
+// 👉 下面为演示，实际部署服务器时替换loadFolderImages函数
+async function loadFolderImages(folderName){
+    // ========= 【本地测试用，上线服务器要替换这段】=========
+    // 示例：假设文件夹里有3张图，命名01.png、02.png、03.png
+    // 你可以在这里手动写图片清单，绕开浏览器目录读取限制
+    return [
+        `${folderName}/01.png`,
+        `${folderName}/02.png`,
+        `${folderName}/03.png`
+    ];
+}
+
+// 渲染图库
+async function renderGallery(name){
+    const groupDom = document.querySelector(`.gallery-group[data-name="${name}"]`);
+    const imgs = await loadFolderImages(name);
+    groupDom.innerHTML = "";
+    imgs.forEach((src,idx)=>{
+        const fileName = src.split("/").pop();
+        const card = document.createElement("div");
+        card.className = "template-card";
+        card.innerHTML = `
+            <div class="black-placeholder">
+                <img src="${src}" alt="${fileName}">
+            </div>
+            <p>${fileName}</p>
+        `;
+        // 点击打开全屏预览
+        card.onclick = ()=> openFullscreen(imgs, idx);
+        groupDom.appendChild(card);
+    })
+}
+
+// 初始化加载全部分类
+(async ()=>{
+    for(let cat of categoryList){
+        await renderGallery(cat);
+    }
+})();
+
+// 顶部标签切换
+const tags = document.querySelectorAll('.filter-tag');
+const groups = document.querySelectorAll('.gallery-group');
+tags.forEach(tag => {
+    tag.addEventListener('click', function () {
+        tags.forEach(t => t.classList.remove('active'));
+        groups.forEach(g => g.classList.remove('active'));
+        this.classList.add('active');
+        const target = this.getAttribute('data-target');
+        const group = document.querySelector(`.gallery-group[data-name="${target}"]`);
+        if (group) {
+            group.classList.add('active');
+        }
+    });
+});
+
+// ===================== 全屏预览逻辑 =====================
+const fullscreenDom = document.getElementById("imgFullscreen");
+const fullImg = document.getElementById("fullImg");
+const fullTip = document.getElementById("fullTip");
+let currentImgList = [];
+let currentIndex = 0;
+let touchStartX = 0;
+
+function openFullscreen(imgList, index){
+    currentImgList = imgList;
+    currentIndex = index;
+    fullscreenDom.style.display = "block";
+    renderFullImg();
+}
+function closeFullscreen(){
+    fullscreenDom.style.display = "none";
+}
+function renderFullImg(){
+    fullImg.src = currentImgList[currentIndex];
+    // 提示文字
+    if(currentIndex === 0){
+        fullTip.innerText = "这是第一张";
+    }else if(currentIndex === currentImgList.length -1){
+        fullTip.innerText = "这是最后一张";
+    }else{
+        fullTip.innerText = "";
+    }
+}
+// 上一张
+function prevImg(){
+    if(currentIndex > 0){
+        currentIndex--;
+        renderFullImg();
+    }
+}
+// 下一张
+function nextImg(){
+    if(currentIndex < currentImgList.length -1){
+        currentIndex++;
+        renderFullImg();
+    }
+}
+// 关闭按钮
+document.querySelector(".full-close").onclick = closeFullscreen;
+// 左右箭头点击
+document.querySelector(".full-prev").onclick = prevImg;
+document.querySelector(".full-next").onclick = nextImg;
+// 触屏左右滑动
+fullscreenDom.addEventListener("touchstart",(e)=>{
+    touchStartX = e.touches[0].clientX;
+})
+fullscreenDom.addEventListener("touchend",(e)=>{
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - touchStartX;
+    if(Math.abs(diff) > 60){
+        if(diff > 0) prevImg();
+        else nextImg();
+    }
+})
+// 点击图片区域外关闭
+fullscreenDom.onclick = function(e){
+    if(e.target === fullscreenDom) closeFullscreen();
+}
+</script>
+</body>
+</html>

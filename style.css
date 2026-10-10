@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+body {
+    background: #ffffff;
+    color: #222;
+    padding-bottom: 80px; /* 底部导航预留高度 */
+}
+/* 底部导航栏 全局共用 */
+footer.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size:14px;
+    color:#444;
+    text-decoration: none;
+}
+.nav-item.active{
+    color:#000;
+}
+.nav-icon{
+    font-size:24px;
+}
+
+/* ===== 主页样式 index.html 专用（原样保留） ===== */
+.home-header{
+    text-align:center;
+    padding:40px 24px 30px;
+}
+.home-header .logo-top{
+    font-size:48px;
+    font-weight:300;
+    color:#333;
+}
+.home-desc{
+    max-width:620px;
+    margin:24px auto;
+    line-height:1.7;
+    font-size:17px;
+    color:#333;
+}
+.home-buttons{
+    display:flex;
+    justify-content:center;
+    gap:32px;
+    margin:40px 0;
+}
+.home-btn-circle{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#222;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    box-shadow: 0 4px 12px #00000026;
+}
+.section-works{
+    margin-top:50px;
+}
+.works-title{
+    text-align:center;
+    font-size:32px;
+    font-weight:500;
+}
+.works-subtitle{
+    text-align:center;
+    color:#888;
+    margin:8px 0 30px;
+    letter-spacing:2px;
+}
+.tabs-makeup{
+    padding:0 20px;
+}
+.tab-make{
+    padding:12px 0;
+    font-size:18px;
+    color:#777;
+    cursor:pointer;
+}
+.tab-make.active{
+    color:#000;
+}
+.work-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    padding:16px;
+}
+.work-card img{
+    width:100%;
+    display:block;
+}
+
+/* ===== 模版页面 template.html 专用 ===== */
+/* 模板页顶部筛选区 */
+.template-filter-top {
+    padding: 16px;
+}
+
+/* 按钮容器：永远两行，每行4个，8个按钮 */
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+}
+
+/* 固定按钮大小 */
+.filter-tag {
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-tag.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+/* 图片网格容器 */
+.template-grid {
+    padding: 16px;
+}
+
+.gallery-group {
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.gallery-group.active {
+    display: grid;
+}
+
+/* 4:3竖屏占位图 aspect-ratio=宽/高 → 4:3竖屏写3/4 */
+.template-card .black-placeholder {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #000000;
+    overflow:hidden;
+}
+.template-card .black-placeholder img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.template-card p {
+    padding: 8px 0;
+    font-size: 15px;
+    color: #333;
+}
+
+/* 电脑大屏：宽度≥900px，图片自动多列自适应 */
+@media screen and (min-width: 900px) {
+    .gallery-group {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+/* 窗口小于900px（手机/电脑缩小窗口）强制2列图片 */
+@media screen and (max-width: 899px) {
+    .gallery-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ========== 全屏预览弹窗样式 ========== */
+.img-fullscreen{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.92);
+    z-index:999;
+}
+.full-close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    color:#fff;
+    font-size:32px;
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,0.15);
+    border-radius:50%;
+    cursor:pointer;
+    user-select:none;
+}
+.full-wrap{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px 60px;
+}
+.full-wrap img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+.full-prev,.full-next{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    color:#fff;
+    font-size:48px;
+    width:50px;
+    height:80px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,0.1);
+    cursor:pointer;
+    user-select:none;
+}
+.full-prev{left:10px;}
+.full-next{right:10px;}
+.full-tip{
+    position:absolute;
+    bottom:40px;
+    left:50%;
+    transform:translateX(-50%);
+    color:#fff;
+    font-size:16px;
+    background:rgba(0,0,0,0.4);
+    padding:6px 16px;
+    border-radius:99px;
+}
