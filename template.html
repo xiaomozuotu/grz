@@ -14,7 +14,7 @@
             <div class="filter-tag active" data-target="纯文字厅头">纯文字厅头</div>
             <div class="filter-tag" data-target="带头像厅头">带头像厅头</div>
             <div class="filter-tag" data-target="福利图">福利图</div>
-            <div class="filter-tag" data-target="厅战图">厅战图</div>
+            <div class="filter-tag" data-target="厅站图">厅站图</div>
             <div class="filter-tag" data-target="厅背景">厅背景</div>
             <div class="filter-tag" data-target="歌单">歌单</div>
             <div class="filter-tag" data-target="关系卡">关系卡</div>
@@ -26,7 +26,7 @@
         <div class="gallery-group active" data-name="纯文字厅头"></div>
         <div class="gallery-group" data-name="带头像厅头"></div>
         <div class="gallery-group" data-name="福利图"></div>
-        <div class="gallery-group" data-name="厅战图"></div>
+        <div class="gallery-group" data-name="厅站图"></div>
         <div class="gallery-group" data-name="厅背景"></div>
         <div class="gallery-group" data-name="歌单"></div>
         <div class="gallery-group" data-name="关系卡"></div>
@@ -62,27 +62,24 @@ const categoryList = [
     "纯文字厅头",
     "带头像厅头",
     "福利图",
-    "厅战图",
+    "厅站图",
     "厅背景",
     "歌单",
     "关系卡",
     "直播框"
 ];
-// 图片后缀
-const imgExt = ["jpg","jpeg","png","webp"];
 
-// ========== 注意：本地file协议无法读取文件夹文件列表 ==========
-// 方案：这里演示【模拟图片数组】，如果你部署在服务器，后端需要返回目录文件列表
-// 👉 下面为演示，实际部署服务器时替换loadFolderImages函数
+// 请求PHP接口读取文件夹图片
 async function loadFolderImages(folderName){
-    // ========= 【本地测试用，上线服务器要替换这段】=========
-    // 示例：假设文件夹里有3张图，命名01.png、02.png、03.png
-    // 你可以在这里手动写图片清单，绕开浏览器目录读取限制
-    return [
-        `${folderName}/01.png`,
-        `${folderName}/02.png`,
-        `${folderName}/03.png`
-    ];
+    try{
+        const res = await fetch(`scan.php?folder=${encodeURIComponent(folderName)}`);
+        if(!res.ok) throw new Error('请求失败');
+        const list = await res.json();
+        return list;
+    }catch(err){
+        console.error("读取图片失败：",err);
+        return [];
+    }
 }
 
 // 渲染图库
