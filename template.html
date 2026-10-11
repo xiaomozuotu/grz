@@ -252,16 +252,16 @@
         </a>
     </footer>
     <script>
-        // 原始固定8个分类顺序，永不改变
+        // 原始固定8个分类顺序，文件夹改为小写拼音
         const tagList = [
-            {name:"纯文字厅头", prefix:"C"},
-            {name:"带头像厅头", prefix:"D"},
-            {name:"福利图", prefix:"F"},
-            {name:"厅背景", prefix:"B"},
-            {name:"厅战图", prefix:"T"},
-            {name:"关系卡", prefix:"K"},
-            {name:"歌单", prefix:"G"},
-            {name:"直播框", prefix:"Z"}
+            {name:"纯文字厅头", folder:"chunwentitingtou", prefix:"C"},
+            {name:"带头像厅头", folder:"daitouxiangtingtou", prefix:"D"},
+            {name:"福利图", folder:"fulitu", prefix:"F"},
+            {name:"厅背景", folder:"tingbeijing", prefix:"B"},
+            {name:"厅战图", folder:"tingzhantu", prefix:"T"},
+            {name:"关系卡", folder:"guanxika", prefix:"K"},
+            {name:"歌单", folder:"gedan", prefix:"G"},
+            {name:"直播框", folder:"zhibokuang", prefix:"Z"}
         ];
         const MAX_NUM = 300;
         let currentImgList = [];
@@ -270,7 +270,6 @@
         const loadingDom = document.getElementById("loading");
         const filterGrid = document.getElementById("filterGrid");
         const toggleBtn = document.getElementById('toggleBtn');
-
         // 图片存在检测
         function checkImageExist(url){
             return new Promise(resolve=>{
@@ -280,7 +279,6 @@
                 img.src = url;
             })
         }
-
         // 只加载【当前选中单个分类】图片
         async function renderGallery(targetIndex){
             galleryWrap.innerHTML = "";
@@ -288,7 +286,7 @@
             const tag = tagList[targetIndex];
             for(let n=1; n<=MAX_NUM; n++){
                 const numStr = String(n).padStart(4,"0");
-                const imgUrl = `./${tag.name}/${tag.prefix}${numStr}.jpg`;
+                const imgUrl = `./${tag.folder}/${tag.prefix}${numStr}.jpg`;
                 const exist = await checkImageExist(imgUrl);
                 if(exist){
                     currentImgList.push(imgUrl);
@@ -297,7 +295,7 @@
                     card.className = "template-card";
                     card.innerHTML = `
                         <div class="black-placeholder">
-                            <img src="${imgUrl}" alt="${fileName}">
+                            <img src="${imgUrl}" alt="${fileName}" loading="lazy">
                         </div>
                         <p>${tag.name} ${fileName}</p>
                     `;
@@ -307,7 +305,6 @@
             }
             loadingDom.style.display = "none";
         }
-
         // 手机端：生成 n,n+1,n+2 循环3个标签
         function renderMobileTags(startIdx){
             filterGrid.innerHTML = "";
@@ -327,7 +324,6 @@
                 filterGrid.appendChild(div);
             })
         }
-
         // 展开全部8个标签
         function renderAllTags(){
             filterGrid.innerHTML = "";
@@ -341,14 +337,12 @@
                 filterGrid.appendChild(div);
             })
         }
-
         // 标签点击统一处理
         function tagClick(idx){
             selectedIndex = idx;
             loadingDom.style.display = "block";
             filterGrid.classList.remove('open');
             toggleBtn.classList.remove('open');
-
             if(window.innerWidth < 900){
                 renderMobileTags(idx);
             }else{
@@ -356,7 +350,6 @@
             }
             renderGallery(idx);
         }
-
         // 折叠展开
         toggleBtn.addEventListener('click', function () {
             filterGrid.classList.toggle('open');
@@ -367,14 +360,12 @@
                 renderMobileTags(selectedIndex);
             }
         });
-
         // =========全屏预览 保留触屏滑动=========
         const fullscreenDom = document.getElementById("imgFullscreen");
         const fullImg = document.getElementById("fullImg");
         const fullTip = document.getElementById("fullTip");
         let fullIndex = 0;
         let touchStartX = 0;
-
         function openFullscreen(imgList, index){
             currentImgList = imgList;
             fullIndex = index;
@@ -423,7 +414,6 @@
         fullscreenDom.onclick = function(e){
             if(e.target === fullscreenDom) closeFullscreen();
         }
-
         // 页面初始化 默认选中0【纯文字厅头】
         if(window.innerWidth <900){
             renderMobileTags(0);
@@ -431,7 +421,6 @@
             renderAllTags();
         }
         renderGallery(0);
-
         // 窗口大小改变自动重绘标签（PC/手机切换）
         window.addEventListener("resize",()=>{
             if(!filterGrid.classList.contains("open")){
