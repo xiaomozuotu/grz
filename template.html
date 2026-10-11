@@ -2,38 +2,236 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 手机视口适配 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>模版</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            background:#fff;
+            color:#000;
+            padding-bottom:80px;
+        }
+        /* 筛选区外层 + 底部分界线（和底部导航一致） */
+        .template-filter-top{
+            padding:16px;
+            border-bottom:1px solid #ddd;
+        }
+        /* 标签行：文字和勾选三角同行，左标签、右三角 */
+        .filter-row{
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        /* 分类网格 电脑端强制一行 */
+        .filter-grid{
+            display:grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: auto;
+            gap:10px;
+            flex:1;
+        }
+        /* 折叠状态：多余分类隐藏 */
+        .filter-grid .filter-tag{
+            display:none;
+        }
+        /* 默认只展示前3项 */
+        .filter-grid .filter-tag:nth-child(-n+3){
+            display:flex;
+        }
+        /* 展开后全部8项显示 */
+        .filter-grid.open .filter-tag{
+            display:flex;
+        }
+        /* 分类标签样式 1:1还原参考图，等线字体，移除对勾 */
+        .filter-tag{
+            padding:10px 6px;
+            text-align:left;
+            border:none;
+            border-radius:0;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:flex-start;
+            color:#888;
+            background:transparent;
+            font-family: "DengXian", "等线", sans-serif;
+            font-size:15px;
+            line-height:1.4;
+        }
+        /* 选中样式：黑色文字，移除末尾对勾 */
+        .filter-tag.active{
+            background:transparent;
+            border:none;
+            color:#000;
+            font-weight:normal;
+        }
+        /* 折叠展开按钮，在整行最右侧，和标签一排 */
+        .toggle-wrap{
+            display:flex;
+        }
+        .toggle-btn{
+            background:transparent;
+            border:none;
+            cursor:pointer;
+            width:36px;
+            height:36px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        /* 参考图线条三角样式 */
+        .triangle{
+            width:10px;
+            height:10px;
+            border-right:1px solid #444;
+            border-bottom:1px solid #444;
+            transform: rotate(45deg);
+            transition: transform 0.25s ease;
+        }
+        .toggle-btn.open .triangle{
+            transform: rotate(-135deg);
+        }
+        /* 图片区域 */
+        .template-grid{
+            padding:0 16px;
+            display:none;
+        }
+        .template-grid.active{
+            display:block;
+        }
+        .gallery-group{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+            gap:14px;
+        }
+        .template-card{
+            background:#f2f2f2;
+            border-radius:8px;
+            overflow:hidden;
+        }
+        .black-placeholder{
+            aspect-ratio:1/1;
+            background:#e5e5e5;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .black-placeholder img{
+            width:100%;
+            height:100%;
+            object-fit:contain;
+        }
+        .template-card p{
+            padding:8px;
+            text-align:center;
+            font-size:13px;
+            color:#000;
+        }
+        /* 全屏预览 */
+        .img-fullscreen{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.92);
+            z-index:999;
+            display:none;
+        }
+        .full-close{
+            position:absolute;
+            top:16px;
+            right:20px;
+            font-size:32px;
+            cursor:pointer;
+            color:#fff;
+        }
+        .full-wrap{
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:40px;
+        }
+        .full-wrap img{
+            max-width:90vw;
+            max-height:90vh;
+        }
+        .full-prev,.full-next{
+            position:absolute;
+            top:50%;
+            transform:translateY(-50%);
+            font-size:48px;
+            padding:16px;
+            cursor:pointer;
+            color:#fff;
+        }
+        .full-prev{
+            left:10px;
+        }
+        .full-next{
+            right:10px;
+        }
+        .full-tip{
+            position:absolute;
+            bottom:30px;
+            width:100%;
+            text-align:center;
+            font-size:16px;
+            color:#fff;
+        }
+        /* 导航保持和主页一致 */
+        .nav-bar{
+            background:#fff !important;
+            border-top:1px solid #ddd;
+        }
+        .nav-item{
+            color:#333;
+        }
+        .nav-item.active{
+            color:#000 !important;
+        }
+        .loading-text{
+            text-align:center;
+            padding:30px;
+            font-size:16px;
+            color:#000;
+        }
+        /* PC电脑端：标签栏强制一行，全部8个横向排列，隐藏折叠按钮 */
+        @media screen and (min-width:900px){
+            .filter-grid{
+                grid-template-columns: repeat(8, 1fr);
+                grid-auto-rows: auto;
+            }
+            .filter-grid .filter-tag{
+                display:flex !important;
+            }
+            .toggle-wrap{
+                display:none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- 顶部筛选标签区域 -->
     <div class="template-filter-top">
-        <div class="filter-grid">
-            <div class="filter-tag active" data-target="纯文字厅头">纯文字厅头</div>
-            <div class="filter-tag" data-target="带头像厅头">带头像厅头</div>
-            <div class="filter-tag" data-target="福利图">福利图</div>
-            <div class="filter-tag" data-target="厅站图">厅站图</div>
-            <div class="filter-tag" data-target="厅背景">厅背景</div>
-            <div class="filter-tag" data-target="歌单">歌单</div>
-            <div class="filter-tag" data-target="关系卡">关系卡</div>
-            <div class="filter-tag" data-target="直播框">直播框</div>
+        <div class="filter-row">
+            <div class="filter-grid" id="filterGrid">
+                <!-- JS动态渲染标签 -->
+            </div>
+            <div class="toggle-wrap">
+                <button class="toggle-btn" id="toggleBtn" aria-label="展开分类">
+                    <span class="triangle"></span>
+                </button>
+            </div>
         </div>
     </div>
-    <!-- 图片区域：JS动态渲染，无需手写卡片 -->
-    <div class="template-grid">
-        <div class="gallery-group active" data-name="纯文字厅头"></div>
-        <div class="gallery-group" data-name="带头像厅头"></div>
-        <div class="gallery-group" data-name="福利图"></div>
-        <div class="gallery-group" data-name="厅站图"></div>
-        <div class="gallery-group" data-name="厅背景"></div>
-        <div class="gallery-group" data-name="歌单"></div>
-        <div class="gallery-group" data-name="关系卡"></div>
-        <div class="gallery-group" data-name="直播框"></div>
+    <div class="loading-text" id="loading">正在检测图片，请稍候...</div>
+    <div class="template-grid active">
+        <div class="gallery-group" id="galleryWrap"></div>
     </div>
-
-    <!-- 全屏预览弹窗 -->
     <div class="img-fullscreen" id="imgFullscreen">
         <span class="full-close">✕</span>
         <div class="full-wrap">
@@ -43,8 +241,6 @@
         <div class="full-next">›</div>
         <div class="full-tip" id="fullTip"></div>
     </div>
-
-    <!-- 底部导航 -->
     <footer class="nav-bar">
         <a href="index.html" class="nav-item">
             <span class="nav-icon">⌂</span>
@@ -55,140 +251,197 @@
             <span>模版</span>
         </a>
     </footer>
+    <script>
+        // 原始固定8个分类顺序，永不改变
+        const tagList = [
+            {name:"纯文字厅头", prefix:"C"},
+            {name:"带头像厅头", prefix:"D"},
+            {name:"福利图", prefix:"F"},
+            {name:"厅背景", prefix:"B"},
+            {name:"厅战图", prefix:"T"},
+            {name:"关系卡", prefix:"K"},
+            {name:"歌单", prefix:"G"},
+            {name:"直播框", prefix:"Z"}
+        ];
+        const MAX_NUM = 300;
+        let currentImgList = [];
+        let selectedIndex = 0;
+        const galleryWrap = document.getElementById("galleryWrap");
+        const loadingDom = document.getElementById("loading");
+        const filterGrid = document.getElementById("filterGrid");
+        const toggleBtn = document.getElementById('toggleBtn');
 
-<script>
-// 分类列表
-const categoryList = [
-    "纯文字厅头",
-    "带头像厅头",
-    "福利图",
-    "厅站图",
-    "厅背景",
-    "歌单",
-    "关系卡",
-    "直播框"
-];
-
-// 请求PHP接口读取文件夹图片
-async function loadFolderImages(folderName){
-    try{
-        const res = await fetch(`scan.php?folder=${encodeURIComponent(folderName)}`);
-        if(!res.ok) throw new Error('请求失败');
-        const list = await res.json();
-        return list;
-    }catch(err){
-        console.error("读取图片失败：",err);
-        return [];
-    }
-}
-
-// 渲染图库
-async function renderGallery(name){
-    const groupDom = document.querySelector(`.gallery-group[data-name="${name}"]`);
-    const imgs = await loadFolderImages(name);
-    groupDom.innerHTML = "";
-    imgs.forEach((src,idx)=>{
-        const fileName = src.split("/").pop();
-        const card = document.createElement("div");
-        card.className = "template-card";
-        card.innerHTML = `
-            <div class="black-placeholder">
-                <img src="${src}" alt="${fileName}">
-            </div>
-            <p>${fileName}</p>
-        `;
-        // 点击打开全屏预览
-        card.onclick = ()=> openFullscreen(imgs, idx);
-        groupDom.appendChild(card);
-    })
-}
-
-// 初始化加载全部分类
-(async ()=>{
-    for(let cat of categoryList){
-        await renderGallery(cat);
-    }
-})();
-
-// 顶部标签切换
-const tags = document.querySelectorAll('.filter-tag');
-const groups = document.querySelectorAll('.gallery-group');
-tags.forEach(tag => {
-    tag.addEventListener('click', function () {
-        tags.forEach(t => t.classList.remove('active'));
-        groups.forEach(g => g.classList.remove('active'));
-        this.classList.add('active');
-        const target = this.getAttribute('data-target');
-        const group = document.querySelector(`.gallery-group[data-name="${target}"]`);
-        if (group) {
-            group.classList.add('active');
+        // 图片存在检测
+        function checkImageExist(url){
+            return new Promise(resolve=>{
+                const img = new Image();
+                img.onload = ()=>resolve(true);
+                img.onerror = ()=>resolve(false);
+                img.src = url;
+            })
         }
-    });
-});
 
-// ===================== 全屏预览逻辑 =====================
-const fullscreenDom = document.getElementById("imgFullscreen");
-const fullImg = document.getElementById("fullImg");
-const fullTip = document.getElementById("fullTip");
-let currentImgList = [];
-let currentIndex = 0;
-let touchStartX = 0;
+        // 只加载【当前选中单个分类】图片
+        async function renderGallery(targetIndex){
+            galleryWrap.innerHTML = "";
+            currentImgList = [];
+            const tag = tagList[targetIndex];
+            for(let n=1; n<=MAX_NUM; n++){
+                const numStr = String(n).padStart(4,"0");
+                const imgUrl = `./${tag.name}/${tag.prefix}${numStr}.jpg`;
+                const exist = await checkImageExist(imgUrl);
+                if(exist){
+                    currentImgList.push(imgUrl);
+                    const fileName = tag.prefix + numStr + ".jpg";
+                    const card = document.createElement("div");
+                    card.className = "template-card";
+                    card.innerHTML = `
+                        <div class="black-placeholder">
+                            <img src="${imgUrl}" alt="${fileName}">
+                        </div>
+                        <p>${tag.name} ${fileName}</p>
+                    `;
+                    card.onclick = ()=> openFullscreen(currentImgList, currentImgList.length -1);
+                    galleryWrap.appendChild(card);
+                }
+            }
+            loadingDom.style.display = "none";
+        }
 
-function openFullscreen(imgList, index){
-    currentImgList = imgList;
-    currentIndex = index;
-    fullscreenDom.style.display = "block";
-    renderFullImg();
-}
-function closeFullscreen(){
-    fullscreenDom.style.display = "none";
-}
-function renderFullImg(){
-    fullImg.src = currentImgList[currentIndex];
-    // 提示文字
-    if(currentIndex === 0){
-        fullTip.innerText = "这是第一张";
-    }else if(currentIndex === currentImgList.length -1){
-        fullTip.innerText = "这是最后一张";
-    }else{
-        fullTip.innerText = "";
-    }
-}
-// 上一张
-function prevImg(){
-    if(currentIndex > 0){
-        currentIndex--;
-        renderFullImg();
-    }
-}
-// 下一张
-function nextImg(){
-    if(currentIndex < currentImgList.length -1){
-        currentIndex++;
-        renderFullImg();
-    }
-}
-// 关闭按钮
-document.querySelector(".full-close").onclick = closeFullscreen;
-// 左右箭头点击
-document.querySelector(".full-prev").onclick = prevImg;
-document.querySelector(".full-next").onclick = nextImg;
-// 触屏左右滑动
-fullscreenDom.addEventListener("touchstart",(e)=>{
-    touchStartX = e.touches[0].clientX;
-})
-fullscreenDom.addEventListener("touchend",(e)=>{
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - touchStartX;
-    if(Math.abs(diff) > 60){
-        if(diff > 0) prevImg();
-        else nextImg();
-    }
-})
-// 点击图片区域外关闭
-fullscreenDom.onclick = function(e){
-    if(e.target === fullscreenDom) closeFullscreen();
-}
-</script>
+        // 手机端：生成 n,n+1,n+2 循环3个标签
+        function renderMobileTags(startIdx){
+            filterGrid.innerHTML = "";
+            const showIndex = [
+                startIdx % 8,
+                (startIdx +1) %8,
+                (startIdx +2) %8
+            ];
+            showIndex.forEach(idx=>{
+                const t = tagList[idx];
+                const div = document.createElement("div");
+                div.className = "filter-tag";
+                if(idx === selectedIndex) div.classList.add("active");
+                div.dataset.realIndex = idx;
+                div.innerText = t.name;
+                div.onclick = ()=> tagClick(idx);
+                filterGrid.appendChild(div);
+            })
+        }
+
+        // 展开全部8个标签
+        function renderAllTags(){
+            filterGrid.innerHTML = "";
+            tagList.forEach((t,idx)=>{
+                const div = document.createElement("div");
+                div.className = "filter-tag";
+                if(idx === selectedIndex) div.classList.add("active");
+                div.dataset.realIndex = idx;
+                div.innerText = t.name;
+                div.onclick = ()=> tagClick(idx);
+                filterGrid.appendChild(div);
+            })
+        }
+
+        // 标签点击统一处理
+        function tagClick(idx){
+            selectedIndex = idx;
+            loadingDom.style.display = "block";
+            filterGrid.classList.remove('open');
+            toggleBtn.classList.remove('open');
+
+            if(window.innerWidth < 900){
+                renderMobileTags(idx);
+            }else{
+                renderAllTags();
+            }
+            renderGallery(idx);
+        }
+
+        // 折叠展开
+        toggleBtn.addEventListener('click', function () {
+            filterGrid.classList.toggle('open');
+            this.classList.toggle('open');
+            if(filterGrid.classList.contains("open")){
+                renderAllTags();
+            }else{
+                renderMobileTags(selectedIndex);
+            }
+        });
+
+        // =========全屏预览 保留触屏滑动=========
+        const fullscreenDom = document.getElementById("imgFullscreen");
+        const fullImg = document.getElementById("fullImg");
+        const fullTip = document.getElementById("fullTip");
+        let fullIndex = 0;
+        let touchStartX = 0;
+
+        function openFullscreen(imgList, index){
+            currentImgList = imgList;
+            fullIndex = index;
+            fullscreenDom.style.display = "block";
+            renderFullImg();
+        }
+        function closeFullscreen(){
+            fullscreenDom.style.display = "none";
+        }
+        function renderFullImg(){
+            fullImg.src = currentImgList[fullIndex];
+            if(fullIndex === 0){
+                fullTip.innerText = "这是第一张";
+            }else if(fullIndex === currentImgList.length -1){
+                fullTip.innerText = "这是最后一张";
+            }else{
+                fullTip.innerText = "";
+            }
+        }
+        function prevImg(){
+            if(fullIndex > 0){
+                fullIndex--;
+                renderFullImg();
+            }
+        }
+        function nextImg(){
+            if(fullIndex < currentImgList.length -1){
+                fullIndex++;
+                renderFullImg();
+            }
+        }
+        document.querySelector(".full-close").onclick = closeFullscreen;
+        document.querySelector(".full-prev").onclick = prevImg;
+        document.querySelector(".full-next").onclick = nextImg;
+        fullscreenDom.addEventListener("touchstart",(e)=>{
+            touchStartX = e.touches[0].clientX;
+        })
+        fullscreenDom.addEventListener("touchend",(e)=>{
+            const endX = e.changedTouches[0].clientX;
+            const diff = endX - touchStartX;
+            if(Math.abs(diff) > 60){
+                if(diff > 0) prevImg();
+                else nextImg();
+            }
+        })
+        fullscreenDom.onclick = function(e){
+            if(e.target === fullscreenDom) closeFullscreen();
+        }
+
+        // 页面初始化 默认选中0【纯文字厅头】
+        if(window.innerWidth <900){
+            renderMobileTags(0);
+        }else{
+            renderAllTags();
+        }
+        renderGallery(0);
+
+        // 窗口大小改变自动重绘标签（PC/手机切换）
+        window.addEventListener("resize",()=>{
+            if(!filterGrid.classList.contains("open")){
+                if(window.innerWidth <900){
+                    renderMobileTags(selectedIndex);
+                }else{
+                    renderAllTags();
+                }
+            }
+        })
+    </script>
 </body>
 </html>

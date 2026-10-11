@@ -5,29 +5,32 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 body {
-    background: #ffffff;
+    /* 底层背景：浅灰底色衬托毛玻璃，不纯白 */
+    background: #f8f8f8;
     color: #222;
-    padding-bottom: 80px; /* 底部导航预留高度 */
+    padding-bottom: 64px; /* 底部导航高度同步减小，预留空间同步缩小 */
 }
-/* 底部导航栏 全局共用 */
+/* 底部导航栏 全局共用｜白色毛玻璃，缩小高度 */
 footer.nav-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 72px;
-    background: #fff;
+    height: 64px;
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 1px solid #eee;
+    border-top: 1px solid rgba(220,220,220,0.35);
 }
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    font-size:14px;
+    gap: 3px;
+    font-size:13px;
     color:#444;
     text-decoration: none;
 }
@@ -35,10 +38,9 @@ footer.nav-bar {
     color:#000;
 }
 .nav-icon{
-    font-size:24px;
+    font-size:20px;
 }
-
-/* ===== 主页样式 index.html 专用（原样保留） ===== */
+/* ===== 主页样式 index.html 专用（原样保留布局，增加毛玻璃适配） ===== */
 .home-header{
     text-align:center;
     padding:40px 24px 30px;
@@ -58,20 +60,21 @@ footer.nav-bar {
 .home-buttons{
     display:flex;
     justify-content:center;
-    gap:32px;
-    margin:40px 0;
+    gap:12px;
+    margin-top:20px;
 }
 .home-btn-circle{
-    width:72px;
-    height:72px;
+    /* 按钮缩小，内部文字保持 */
+    width:42px;
+    height:42px;
     border-radius:50%;
-    background:#222;
-    color:white;
+    background:#111;
+    color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
     font-size:22px;
-    box-shadow: 0 4px 12px #00000026;
+    font-weight:600;
 }
 .section-works{
     margin-top:50px;
@@ -99,6 +102,13 @@ footer.nav-bar {
 .tab-make.active{
     color:#000;
 }
+.tab-make p{
+    text-indent:2em;
+    margin:8px 0;
+    font-size:17px;
+    color:#333;
+    line-height:1.7;
+}
 .work-grid{
     display:grid;
     grid-template-columns: 1fr 1fr;
@@ -109,58 +119,88 @@ footer.nav-bar {
     width:100%;
     display:block;
 }
-
 /* ===== 模版页面 template.html 专用 ===== */
-/* 模板页顶部筛选区 */
+/* 模板页顶部筛选区｜白色毛玻璃，缩小padding，整体变矮 */
 .template-filter-top {
-    padding: 16px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom:1px solid rgba(220,220,220,0.35);
 }
-
-/* 按钮容器：永远两行，每行4个，8个按钮 */
+.filter-wrap{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+/* 按钮容器：电脑大屏永远两行，每行4个，8个按钮 */
 .filter-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, auto);
-    gap: 10px;
+    gap: 8px;
+    flex:1;
 }
-
-/* 固定按钮大小 */
+/* 修改标签高度，整体缩小 */
 .filter-tag {
-    height: 44px;
-    line-height: 44px;
+    height: 36px;
+    line-height: 36px;
     text-align: center;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: #fff;
-    font-size: 14px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    font-size: 13px;
+    color:#888;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
     user-select: none;
+    font-family: "DengXian", "等线", sans-serif;
 }
-
+/* 选中：黑色文字 + 加粗 + 黑色下划线 */
 .filter-tag.active {
-    background: #000;
-    color: #fff;
-    border-color: #000;
+    background: transparent;
+    border:none;
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-color:#000;
+    text-decoration-thickness:2px;
 }
-
+/* 线条空心三角按钮（参考截图样式） */
+.filter-triangle-btn{
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding: 4px;
+    display:flex;
+    align-items:center;
+}
+.filter-line-triangle{
+    width:10px;
+    height:10px;
+    border-right:1px solid #666;
+    border-bottom:1px solid #666;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+.filter-triangle-btn.open .filter-line-triangle{
+    transform: rotate(-135deg);
+}
 /* 图片网格容器 */
 .template-grid {
     padding: 16px;
 }
-
 .gallery-group {
     display: none;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
-
 .gallery-group.active {
     display: grid;
 }
-
 /* 4:3竖屏占位图 aspect-ratio=宽/高 → 4:3竖屏写3/4 */
 .template-card .black-placeholder {
     width: 100%;
@@ -173,26 +213,42 @@ footer.nav-bar {
     height:100%;
     object-fit:cover;
 }
-
 .template-card p {
     padding: 8px 0;
     font-size: 15px;
     color: #333;
 }
-
-/* 电脑大屏：宽度≥900px，图片自动多列自适应 */
+/* 电脑大屏：宽度≥900px，完整8标签，隐藏三角 */
 @media screen and (min-width: 900px) {
+    .filter-triangle-btn{
+        display:none;
+    }
     .gallery-group {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 }
-/* 窗口小于900px（手机/电脑缩小窗口）强制2列图片 */
+/* ========= 手机/窗口缩小 小于899px ========= */
 @media screen and (max-width: 899px) {
+    .filter-grid{
+        grid-template-columns: repeat(3,1fr);
+        grid-template-rows: auto;
+    }
+    /* 默认只显示前3个标签 */
+    .filter-grid .filter-tag{
+        display:none;
+    }
+    .filter-grid .filter-tag:nth-child(-n+3){
+        display:block;
+    }
+    /* 展开后全部显示 */
+    .filter-grid.expand .filter-tag{
+        display:block;
+    }
+    /* 窗口小于900px（手机/电脑缩小窗口）强制2列图片 */
     .gallery-group {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
 /* ========== 全屏预览弹窗样式 ========== */
 .img-fullscreen{
     display:none;

@@ -5,39 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小墨作图 - 主页</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .home-buttons{
+            display:flex;
+            justify-content:center;
+            gap:12px;
+            margin-top:20px;
+        }
+        .home-btn-circle{
+            /* 按钮缩小，内部文字保持 */
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            background:#111;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:22px;
+            font-weight:600;
+        }
+        .tab-make p{
+            text-indent:2em;
+            margin:8px 0;
+            /* 和home-desc完全一致：字体、字号、颜色、行高 */
+            font-size:17px;
+            color:#333;
+            line-height:1.7;
+        }
+    </style>
 </head>
 <body>
     <!-- 主页头部文案区域【这里文字你可以直接修改】 -->
     <div class="home-header">
-        <div class="logo-top">xmzt</div>
+<div class="logo-top">
+    <img src="logo.png" alt="logo" style="height:90px;width:auto;">
         <h1 style="font-size:34px;margin-top:12px;">Mo Studio</h1>
         <div class="home-desc">
 小墨作图隶属于Mo Studio 个人品牌<br>
 Mo Studio旗下涵盖：M映像摄影工作室、
 三只熊婚礼摄影工作室、小墨作图、
 亲切音频、亲切家装机……
-
         </div>
     </div>
-    <!-- 4个圆形功能按钮 -->
+    <!-- 4个圆形功能按钮，一字一个按钮 -->
     <div class="home-buttons">
-        <div class="home-btn-circle">📞</div>
-        <div class="home-btn-circle">💬</div>
-        <div class="home-btn-circle">📍</div>
-        <div class="home-btn-circle">↗</div>
+        <div class="home-btn-circle">小</div>
+        <div class="home-btn-circle">墨</div>
+        <div class="home-btn-circle">作</div>
+        <div class="home-btn-circle">图</div>
     </div>
     <hr style="margin:30px 0;border:1px solid #eee;">
-
     <!-- 作品区域 -->
     <div class="section-works">
         <h2 class="works-title">个人简介</h2>
         <div class="works-subtitle">— 小墨/亲切 —</div>
         <!-- 化妆师标签 -->
         <div class="tabs-makeup">
-            <div class="tab-make active">首先感谢您选择小墨作图，有些模板更新不及时，请见谅！是图就能做没有模板也可以来图定制。<br>小墨和亲切都是我的名字，2015年开始从事摄影工作艺名小墨，先后创办3M映像摄影工作室、三只熊婚礼摄影工作室2022年转型互联网直播，抖音网名亲切开始从事直播，24年转入幕后从事运营与设备批发调试工作。</div>
+            <div class="tab-make active">
+                <p>首先感谢您选择小墨作图，有些模板更新不及时，请见谅！是图就能做没有模板也可以来图定制。</p>
+                <p>小墨和亲切都是我的名字，2015 年开始从事摄影工作艺名小墨，先后创办 3M 映像摄影工作室、三只熊婚礼摄影工作室。</p>
+                <p>2022 年转型互联网直播，抖音网名亲切开始从事直播，24 年转入幕后从事运营与设备批发调试工作。</p>
+            </div>
         </div>
     </div>
-
     <!-- 底部导航【主页 / 模版，删除了关于】 -->
     <footer class="nav-bar">
         <a href="index.html" class="nav-item active">
