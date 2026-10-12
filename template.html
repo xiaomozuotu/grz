@@ -281,6 +281,8 @@
                 const imgUrl = `./${tag.folder}/${tag.prefix}${numStr}.webp`;
                 const exist = await checkImageExist(imgUrl);
                 if(exist){
+                    // 拿到当前图片数组下标
+                    const idx = currentImgList.length;
                     currentImgList.push(imgUrl);
                     const fileName = tag.prefix + numStr + ".webp";
                     const card = document.createElement("div");
@@ -291,7 +293,8 @@
                         </div>
                         <p>${tag.name} ${fileName}</p>
                     `;
-                    card.onclick = ()=> openFullscreen(currentImgList, currentImgList.length -1);
+                    // 传入当前图片下标idx，修复永远跳到最后一张bug
+                    card.onclick = ()=> openFullscreen(currentImgList, idx);
                     galleryWrap.appendChild(card);
                 }
             }
