@@ -194,12 +194,6 @@
         .nav-item.active{
             color:#000 !important;
         }
-        .loading-text{
-            text-align:center;
-            padding:30px;
-            font-size:16px;
-            color:#000;
-        }
         /* PC电脑端：标签栏强制一行，全部8个横向排列，隐藏折叠按钮 */
         @media screen and (min-width:900px){
             .filter-grid{
@@ -228,7 +222,6 @@
             </div>
         </div>
     </div>
-    <div class="loading-text" id="loading">正在检测图片，请稍候...</div>
     <div class="template-grid active">
         <div class="gallery-group" id="galleryWrap"></div>
     </div>
@@ -267,7 +260,6 @@
         let currentImgList = [];
         let selectedIndex = 0;
         const galleryWrap = document.getElementById("galleryWrap");
-        const loadingDom = document.getElementById("loading");
         const filterGrid = document.getElementById("filterGrid");
         const toggleBtn = document.getElementById('toggleBtn');
         // 图片存在检测
@@ -286,11 +278,11 @@
             const tag = tagList[targetIndex];
             for(let n=1; n<=MAX_NUM; n++){
                 const numStr = String(n).padStart(4,"0");
-                const imgUrl = `./${tag.folder}/${tag.prefix}${numStr}.jpg`;
+                const imgUrl = `./${tag.folder}/${tag.prefix}${numStr}.webp`;
                 const exist = await checkImageExist(imgUrl);
                 if(exist){
                     currentImgList.push(imgUrl);
-                    const fileName = tag.prefix + numStr + ".jpg";
+                    const fileName = tag.prefix + numStr + ".webp";
                     const card = document.createElement("div");
                     card.className = "template-card";
                     card.innerHTML = `
@@ -303,7 +295,6 @@
                     galleryWrap.appendChild(card);
                 }
             }
-            loadingDom.style.display = "none";
         }
         // 手机端：生成 n,n+1,n+2 循环3个标签
         function renderMobileTags(startIdx){
@@ -340,7 +331,6 @@
         // 标签点击统一处理
         function tagClick(idx){
             selectedIndex = idx;
-            loadingDom.style.display = "block";
             filterGrid.classList.remove('open');
             toggleBtn.classList.remove('open');
             if(window.innerWidth < 900){
